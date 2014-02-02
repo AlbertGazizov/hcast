@@ -1,7 +1,7 @@
 class HCast::Casters::SymbolCaster
   MAX_SYMBOL_LENGTH = 1000
 
-  def self.cast(value, attr_name)
+  def self.cast(value, attr_name, options = {})
     if value.is_a?(Symbol)
       value
     elsif value.is_a?(String)

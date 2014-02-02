@@ -1,6 +1,6 @@
 class HCast::Casters::FloatCaster
 
-  def self.cast(value, attr_name)
+  def self.cast(value, attr_name, options = {})
     if value.is_a?(Float)
       value
     elsif value.is_a?(String)

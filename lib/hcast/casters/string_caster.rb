@@ -1,6 +1,6 @@
 class HCast::Casters::StringCaster
 
-  def self.cast(value, attr_name)
+  def self.cast(value, attr_name, options = {})
     if value.is_a?(String)
       value
     elsif value.is_a?(Symbol)

@@ -1,6 +1,6 @@
 class HCast::Casters::IntegerCaster
 
-  def self.cast(value, attr_name)
+  def self.cast(value, attr_name, options = {})
     if value.is_a?(Integer)
       value
     elsif value.is_a?(String)

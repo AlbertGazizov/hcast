@@ -1,6 +1,6 @@
 class HCast::Casters::DateTimeCaster
 
-  def self.cast(value, attr_name)
+  def self.cast(value, attr_name, options = {})
     if value.is_a?(DateTime)
       value
     elsif value.is_a?(Time)

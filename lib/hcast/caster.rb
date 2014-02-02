@@ -45,7 +45,7 @@ module HCast::Caster
   end
 
   def cast_attribute(hash, attribute)
-    attribute.caster.cast(hash[attribute.name], attribute.name)
+    attribute.caster.cast(hash[attribute.name], attribute.name, attribute.options)
   end
 
   def cast_children(hash, attribute)
