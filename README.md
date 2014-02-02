@@ -48,12 +48,12 @@ ContactCaster.new.cast({
       },
       emails: ["test@example.com", "test2@example.com"],
       social_accounts: [
-        { 
-          name: "john_smith", 
+        {
+          name: "john_smith",
           type: "twitter"
         },
         {
-          name: "John", 
+          name: "John",
           type: :facebook
         }
       ]
@@ -77,11 +77,11 @@ The output will be:
     emails: ["test@example.com", "test2@example.com"],
     social_accounts: [
       {
-        name: "john_smith", 
+        name: "john_smith",
         type: :twitter"
       },
       {
-        name: "John", 
+        name: "John",
         type: :facebook
       }
     ]
@@ -111,3 +111,6 @@ Or install it yourself as:
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## TODO
+1 Add validation for each
