@@ -1,5 +1,11 @@
+# Parses caster rules
+# and returns list of HCast::Metadata::Attribute instances
+# which contains casting rules
 class HCast::AttributesParser
 
+  # Performs casting
+  # @param block [Proc] block with casting rules
+  # @return Array(HCast::Metadata::Attribute) list of casting rules
   def self.parse(&block)
     dsl = DSL.new
     dsl.instance_exec(&block)
@@ -13,7 +19,7 @@ class HCast::AttributesParser
       @attributes = []
     end
 
-    # Redefined becase each class has built in hash method
+    # Redefined becase each class has the built in hash method
     def hash(*args, &block)
       method_missing(:hash, *args, &block)
     end

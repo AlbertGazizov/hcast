@@ -10,13 +10,20 @@ require 'hcast/caster'
 module HCast
   @@casters = {}
 
+  # Defines caster without adding own class
+  # @note Not yet implemented
   def self.create(&block)
   end
 
+  # Returns list of defined casters
   def self.casters
     @@casters
   end
 
+  # Adds new casters to HCast
+  # Allow extend HCast with your own casters
+  # @param caster_name [Symbol] caster name
+  # @param caster      [Class]  caster
   def self.add_caster(caster_name, caster)
     @@casters[caster_name] = caster
   end

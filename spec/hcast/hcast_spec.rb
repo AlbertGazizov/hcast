@@ -4,29 +4,14 @@ describe HCast do
 
   describe ".create" do
     it "should cast hash attributes" do
-      pending
+      pending "NOT YET IMPLEMENTED"
       input_hash = {
         contact: {
           name: "John Smith",
           age: "22",
-          weight: "65.5",
-          birthday: "2014-02-02",
-          last_logged_in: "2014-02-02 10:10:00",
-          last_visited_at: "2014-02-02 10:10:00",
           company: {
             name: "MyCo",
-          },
-          emails: [ "test@example.com", "test2@example.com" ],
-          social_accounts: [
-            {
-              name: "john_smith",
-              type: 'twitter',
-            },
-            {
-              name: "John",
-              type: :facebook,
-            },
-          ]
+          }
         }
       }
 
@@ -34,20 +19,8 @@ describe HCast do
         hash :contact do
           string   :name
           integer  :age
-          float    :weight
-          date     :birthday
-          datetime :last_logged_in
-          time     :last_visited_at
           hash :company do
             string :name
-          end
-          array :emails, each: :string
-          array :social_accounts, each: :hash do
-            string :name
-            symbol :type
-          end
-          array :attendees, each: :hash do
-            integer [:user_id, :contact_id], optional: true
           end
         end
 
