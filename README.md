@@ -2,7 +2,7 @@
 
 
 
-HCast is a library for casting and validing hash attributes
+HCast is a library for casting hash attributes
 
 ## Usage
 
