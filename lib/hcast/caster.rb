@@ -22,9 +22,14 @@ module HCast::Caster
   def cast_attributes(hash, attributes)
     casted_hash = {}
     attributes.each do |attribute|
-      check_attribute_given(hash, attribute) if attribute.required?
-      casted_hash[attribute.name] = cast_attribute(hash, attribute)
-      cast_children(hash, attribute) if attribute.has_children?
+      if hash.has_key?(attribute.name)
+        casted_hash[attribute.name] = cast_attribute(hash, attribute)
+        cast_children(hash, attribute) if attribute.has_children?
+      else
+        if attribute.required?
+          raise HCast::Errors::MissingAttributeError, "#{attribute.name} should be given"
+        end
+      end
     end
     casted_hash
   end
@@ -39,12 +44,6 @@ module HCast::Caster
 
   def cast_attribute(hash, attribute)
     attribute.caster.cast(hash[attribute.name], attribute.name)
-  end
-
-  def check_attribute_given(hash, attribute)
-    if !hash.has_key?(attribute.name)
-      raise HCast::Errors::MissingAttributeError, "#{attribute.name} should be given"
-    end
   end
 
   def cast_children(hash, attribute)
