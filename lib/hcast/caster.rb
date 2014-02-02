@@ -24,7 +24,9 @@ module HCast::Caster
     attributes.each do |attribute|
       if hash.has_key?(attribute.name)
         casted_hash[attribute.name] = cast_attribute(hash, attribute)
-        cast_children(hash, attribute) if attribute.has_children?
+        if attribute.has_children?
+          casted_hash[attribute.name] = cast_children(hash, attribute)
+        end
       else
         if attribute.required?
           raise HCast::Errors::MissingAttributeError, "#{attribute.name} should be given"
@@ -48,7 +50,7 @@ module HCast::Caster
 
   def cast_children(hash, attribute)
     if attribute.caster == HCast::Casters::ArrayCaster
-      hash[attribute.name].each do |val|
+      hash[attribute.name].map do |val|
         cast_attributes(val, attribute.children)
       end
     else

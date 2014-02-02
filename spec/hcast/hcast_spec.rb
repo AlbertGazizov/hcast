@@ -8,11 +8,11 @@ describe HCast do
       input_hash = {
         contact: {
           name: "John Smith",
-          age: 22,
-          weight: 65.5,
-          birthday: Date.today,
-          last_logged_in: DateTime.now,
-          last_visited_at: Time.now,
+          age: "22",
+          weight: "65.5",
+          birthday: "2014-02-02",
+          last_logged_in: "2014-02-02 10:10:00",
+          last_visited_at: "2014-02-02 10:10:00",
           company: {
             name: "MyCo",
           },
@@ -20,7 +20,7 @@ describe HCast do
           social_accounts: [
             {
               name: "john_smith",
-              type: :twitter,
+              type: 'twitter',
             },
             {
               name: "John",

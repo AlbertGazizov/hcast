@@ -30,11 +30,38 @@ describe HCast::Caster do
       input_hash = {
         contact: {
           name: "John Smith",
+          age: "22",
+          weight: "65.5",
+          birthday: "2014-02-02",
+          last_logged_in: "2014-02-02 10:10:00",
+          last_visited_at: "2014-02-02 10:10:00",
+          company: {
+            name: "MyCo",
+          },
+          emails: [ "test@example.com", "test2@example.com" ],
+          social_accounts: [
+            {
+              name: "john_smith",
+              type: 'twitter',
+            },
+            {
+              name: "John",
+              type: :facebook,
+            },
+          ]
+        }
+      }
+
+      casted_hash = ContactCaster.new.cast(input_hash)
+
+      casted_hash.should == {
+        contact: {
+          name: "John Smith",
           age: 22,
           weight: 65.5,
-          birthday: Date.today,
-          last_logged_in: DateTime.now,
-          last_visited_at: Time.now,
+          birthday: Date.parse("2014-02-02"),
+          last_logged_in: DateTime.parse("2014-02-02 10:10:00"),
+          last_visited_at: Time.parse("2014-02-02 10:10:00"),
           company: {
             name: "MyCo",
           },
@@ -51,10 +78,6 @@ describe HCast::Caster do
           ]
         }
       }
-
-      casted_hash = ContactCaster.new.cast(input_hash)
-
-      casted_hash.should == input_hash
     end
 
     it "should raise error if some attribute can't be casted" do
@@ -78,7 +101,7 @@ describe HCast::Caster do
             {
               name: "John",
               type: :facebook,
-            },
+            }
           ]
         }
       }
@@ -108,7 +131,7 @@ describe HCast::Caster do
             {
               name: "John",
               type: :facebook,
-            },
+            }
           ]
         }
       }
