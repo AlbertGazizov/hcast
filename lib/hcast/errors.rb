@@ -1,6 +1,7 @@
 module HCast::Errors
-  class HCastError          < StandardError; end
-  class CasterNotFoundError < HCastError;    end
-  class ArgumentError       < HCastError;    end
-  class CastingError        < HCastError;    end
+  class HCastError            < StandardError; end
+  class CasterNotFoundError   < HCastError;    end
+  class ArgumentError         < HCastError;    end
+  class CastingError          < HCastError;    end
+  class MissingAttributeError < HCastError;    end
 end

@@ -31,11 +31,11 @@ describe HCast do
 
       caster = HCast.create do
         hash :contact do
-          string   :name,           map_to: :fullname, required: true
-          integer  :age,            inclusion: 1..90
-          float    :weight,         gte: 10, if: proc { |hash| hash[:contact][:name] }
-          date     :birthday,       lte: Date.today
-          datetime :last_logged_in, equal: DateTime.now, if: :registered?
+          string   :name
+          integer  :age
+          float    :weight
+          date     :birthday
+          datetime :last_logged_in
           time     :last_visited_at
           hash :company do
             string :name
@@ -46,7 +46,7 @@ describe HCast do
             symbol :type
           end
           array :attendees, each: :hash do
-            integer [:user_id, :contact_id], required: true
+            integer [:user_id, :contact_id], optional: true
           end
         end
 
@@ -55,21 +55,9 @@ describe HCast do
         end
       end
 
-      casted_hash = caster.cast!(input_hash)
+      casted_hash = caster.cast(input_hash)
       casted_hash.object_id.should_not == hash.object_id
       caster_hash.should == hash
     end
-  end
-end
-
-class Contacts::Entities::Contact
-  def initialize(first_name)
-    Utils::Attributes.assign_attributes(self, attributes)
-  end
-
-  def add_email(email, type)
-  end
-
-  def build_profile(name)
   end
 end

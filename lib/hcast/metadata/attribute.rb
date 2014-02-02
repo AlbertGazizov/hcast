@@ -14,5 +14,13 @@ module HCast::Metadata
       !children.empty?
     end
 
+    def required?
+      !optional?
+    end
+
+    def optional?
+      options[:optional]
+    end
+
   end
 end
