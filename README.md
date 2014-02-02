@@ -36,31 +36,59 @@ end
 Instanticate caster and give you hash for casting:
 ```ruby
 ContactCaster.new.cast({
+    contact: {
+      name: "John Smith",
+      age: "22",
+      weight: "65.5",
+      birthday: "2014-02-02",
+      last_logged_in: "2014-02-02 10:10:00",
+      last_visited_at: "2014-02-02 10:10:00",
+      company: {
+        name: "MyCo"
+      },
+      emails: ["test@example.com", "test2@example.com"],
+      social_accounts: [
+        { 
+          name: "john_smith", 
+          type: "twitter"
+        },
+        {
+          name: "John", 
+          type: :facebook
+        }
+      ]
+    }
+  }
+})
+```
+The output will be:
+```ruby
+{
   contact: {
     name: "John Smith",
     age: 22,
     weight: 65.5,
-    birthday: Date.today,
-    last_logged_in: DateTime.now,
-    last_visited_at: Time.now,
+    birthday: #<Date: 2014-02-02 ((2456691j,0s,0n),+0s,2299161j)>,
+    last_logged_in: #<DateTime: 2014-02-02T10:10:00+00:00 ((2456691j,36600s,0n),+0s,2299161j)>,
+    last_visited_at: 2014-02-02 10:10:00 +0400,
     company: {
-      name: "MyCo",
+      name: "MyCo"
     },
     emails: ["test@example.com", "test2@example.com"],
     social_accounts: [
       {
-        name: "john_smith",
-        type: :twitter,
+        name: "john_smith", 
+        type: :twitter"
       },
       {
-        name: "John",
-        type: :facebook,
-      },
+        name: "John", 
+        type: :facebook
+      }
     ]
   }
-})
-
+}
 ```
+
 
 ## Installation
 
