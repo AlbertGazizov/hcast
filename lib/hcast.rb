@@ -4,7 +4,7 @@ require 'hcast/version'
 require 'hcast/errors'
 require 'hcast/casters'
 require 'hcast/metadata/attribute'
-require 'hcast/rules_parser'
+require 'hcast/attributes_parser'
 require 'hcast/caster'
 
 module HCast

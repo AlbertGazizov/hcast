@@ -6,16 +6,16 @@ module HCast::Caster
   end
 
   module ClassMethods
-    def rules(&block)
+    def attributes(&block)
       raise ArgumentError, "You should provide block" unless block_given?
 
-      attributes = HCast::RulesParser.parse(&block)
+      attributes = HCast::AttributesParser.parse(&block)
       self.class_variable_set(:@@attributes, attributes)
     end
   end
 
   def cast(hash)
-    check_rules_defined!
+    check_attributes_defined!
     cast_attributes(hash, @@attributes)
   end
 
@@ -38,9 +38,9 @@ module HCast::Caster
 
   private
 
-  def check_rules_defined!
+  def check_attributes_defined!
     unless self.class.class_variable_defined?(:@@attributes)
-      raise HCast::Errors::ArgumentError, "Rules undefined"
+      raise HCast::Errors::ArgumentError, "Attributes block should be defined"
     end
   end
 

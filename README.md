@@ -12,7 +12,7 @@ Create caster and declare hash attributes:
 class ContactCaster
   include HCast::Caster
 
-  rules do
+  attributes do
     hash :contact do
       string   :name
       integer  :age, optional: true

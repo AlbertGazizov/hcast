@@ -6,7 +6,7 @@ describe HCast::Caster do
     class ContactCaster
       include HCast::Caster
 
-      rules do
+      attributes do
         hash :contact do
           string   :name
           integer  :age, optional: true

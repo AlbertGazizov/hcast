@@ -1,4 +1,4 @@
-class HCast::RulesParser
+class HCast::AttributesParser
 
   def self.parse(&block)
     dsl = DSL.new
@@ -29,7 +29,7 @@ class HCast::RulesParser
 
       attribute = HCast::Metadata::Attribute.new(attr_name, caster, options)
       if block_given?
-        attribute.children = HCast::RulesParser.parse(&block)
+        attribute.children = HCast::AttributesParser.parse(&block)
       end
       attributes << attribute
     end
