@@ -105,6 +105,7 @@ module HCast::Caster
   # @param hash [Hash] hash for casting
   def cast(hash)
     check_attributes_defined!
+    check_hash_given!(hash)
     cast_attributes(hash, @@attributes)
   end
 
@@ -124,6 +125,7 @@ module HCast::Caster
         end
       end
     end
+    check_unexpected_attributes_not_given!(hash, casted_hash)
     casted_hash
   end
 
@@ -144,6 +146,19 @@ module HCast::Caster
   def check_attributes_defined!
     unless self.class.class_variable_defined?(:@@attributes)
       raise HCast::Errors::ArgumentError, "Attributes block should be defined"
+    end
+  end
+
+  def check_hash_given!(hash)
+    unless hash.is_a?(Hash)
+      raise HCast::Errors::ArgumentError, "Hash should be given"
+    end
+  end
+
+  def check_unexpected_attributes_not_given!(hash, casted_hash)
+    unexpected_keys = hash.keys - casted_hash.keys
+    unless unexpected_keys.empty?
+      raise HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: #{unexpected_keys}"
     end
   end
 end

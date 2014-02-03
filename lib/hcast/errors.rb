@@ -14,4 +14,7 @@ module HCast::Errors
 
   # Raised when required hash attribute wasn't given for casting
   class MissingAttributeError < HCastError;    end
+
+  # Raised when unexpected hash attribute was given for casting
+  class UnexpectedAttributeError < HCastError; end
 end

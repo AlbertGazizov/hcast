@@ -169,7 +169,37 @@ describe HCast::Caster do
       expect do
         ContactCaster.new.cast(input_hash)
       end.to_not raise_error
+    end
 
+    it "should raise error if unexpected attribute was given" do
+      input_hash = {
+        wrong_attribute: 'foo',
+        contact: {
+          name: "Jim",
+          weight: 65.5,
+          birthday: Date.today,
+          last_logged_in: DateTime.now,
+          last_visited_at: Time.now,
+          company: {
+            name: "MyCo",
+          },
+          emails: [ "test@example.com", "test2@example.com" ],
+          social_accounts: [
+            {
+              name: "john_smith",
+              type: :twitter,
+            },
+            {
+              name: "John",
+              type: :facebook,
+            },
+          ]
+        }
+      }
+
+      expect do
+        ContactCaster.new.cast(input_hash)
+      end.to raise_error(HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: [:wrong_attribute]")
     end
   end
 end
