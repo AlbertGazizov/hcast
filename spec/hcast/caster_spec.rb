@@ -52,7 +52,7 @@ describe HCast::Caster do
         }
       }
 
-      casted_hash = ContactCaster.new.cast(input_hash)
+      casted_hash = ContactCaster.cast(input_hash)
 
       casted_hash.should == {
         contact: {
@@ -107,7 +107,7 @@ describe HCast::Caster do
       }
 
       expect do
-        ContactCaster.new.cast(input_hash)
+        ContactCaster.cast(input_hash)
       end.to raise_error(HCast::Errors::CastingError, "name should be a string")
     end
 
@@ -137,7 +137,7 @@ describe HCast::Caster do
       }
 
       expect do
-        ContactCaster.new.cast(input_hash)
+        ContactCaster.cast(input_hash)
       end.to raise_error(HCast::Errors::MissingAttributeError, "name should be given")
     end
 
@@ -167,7 +167,7 @@ describe HCast::Caster do
       }
 
       expect do
-        ContactCaster.new.cast(input_hash)
+        ContactCaster.cast(input_hash)
       end.to_not raise_error
     end
 
@@ -198,7 +198,7 @@ describe HCast::Caster do
       }
 
       expect do
-        ContactCaster.new.cast(input_hash)
+        ContactCaster.cast(input_hash)
       end.to raise_error(HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: [:wrong_attribute]")
     end
 
@@ -228,7 +228,7 @@ describe HCast::Caster do
         }
       }
 
-      casted_hash = ContactCaster.new.cast(input_hash, input_keys: :string, output_keys: :symbol)
+      casted_hash = ContactCaster.cast(input_hash, input_keys: :string, output_keys: :symbol)
 
       casted_hash.should == {
         contact: {
