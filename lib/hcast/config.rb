@@ -1,5 +1,5 @@
 class HCast::Config
-  attr_accessor :input_keys, :outpu_keys
+  attr_accessor :input_keys, :output_keys
 
   def input_keys
     @input_keys || :symbol
