@@ -201,5 +201,59 @@ describe HCast::Caster do
         ContactCaster.new.cast(input_hash)
       end.to raise_error(HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: [:wrong_attribute]")
     end
+
+    it "should convert accept hash with string keys and cast them to symbol keys" do
+      input_hash = {
+        'contact' => {
+          'name' => "John Smith",
+          'age' => "22",
+          'weight' => "65.5",
+          'birthday' => "2014-02-02",
+          'last_logged_in' => "2014-02-02 10:10:00",
+          'last_visited_at' => "2014-02-02 10:10:00",
+          'company' => {
+            'name' => "MyCo",
+          },
+          'emails' => [ "test@example.com", "test2@example.com" ],
+          'social_accounts' => [
+            {
+             'name' => "john_smith",
+             'type' => 'twitter',
+            },
+            {
+             'name' => "John",
+             'type' => :facebook,
+            },
+          ]
+        }
+      }
+
+      casted_hash = ContactCaster.new.cast(input_hash, input_keys: :string, output_keys: :symbol)
+
+      casted_hash.should == {
+        contact: {
+          name: "John Smith",
+          age: 22,
+          weight: 65.5,
+          birthday: Date.parse("2014-02-02"),
+          last_logged_in: DateTime.parse("2014-02-02 10:10:00"),
+          last_visited_at: Time.parse("2014-02-02 10:10:00"),
+          company: {
+            name: "MyCo",
+          },
+          emails: [ "test@example.com", "test2@example.com" ],
+          social_accounts: [
+            {
+              name: "john_smith",
+              type: :twitter,
+            },
+            {
+              name: "John",
+              type: :facebook,
+            },
+          ]
+        }
+      }
+    end
   end
 end

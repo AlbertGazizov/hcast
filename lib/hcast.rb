@@ -2,6 +2,7 @@ require 'active_support/concern.rb'
 
 require 'hcast/version'
 require 'hcast/errors'
+require 'hcast/config'
 require 'hcast/casters'
 require 'hcast/metadata/attribute'
 require 'hcast/attributes_parser'
@@ -26,6 +27,10 @@ module HCast
   # @param caster      [Class]  caster
   def self.add_caster(caster_name, caster)
     @@casters[caster_name] = caster
+  end
+
+  def self.config
+    @@config ||= HCast::Config.new
   end
 end
 

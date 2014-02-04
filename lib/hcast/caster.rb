@@ -103,21 +103,25 @@ module HCast::Caster
 
   # Performs casting
   # @param hash [Hash] hash for casting
-  def cast(hash)
+  # @param options [Hash] options, input_keys: :string, output_key: :symbol
+  def cast(hash, options = {})
     check_attributes_defined!
     check_hash_given!(hash)
-    cast_attributes(hash, @@attributes)
+    check_options!(options)
+    set_default_options(options)
+    cast_attributes(hash, @@attributes, options)
   end
 
   private
 
-  def cast_attributes(hash, attributes)
+  def cast_attributes(hash, attributes, options)
     casted_hash = {}
+    hash_keys = get_keys(hash, options)
     attributes.each do |attribute|
-      if hash.has_key?(attribute.name)
-        casted_hash[attribute.name] = cast_attribute(hash, attribute)
+      if hash_keys.include?(attribute.name)
+        casted_hash[attribute.name] = cast_attribute(hash, attribute, options)
         if attribute.has_children?
-          casted_hash[attribute.name] = cast_children(hash, attribute)
+          casted_hash[attribute.name] = cast_children(hash, attribute, options)
         end
       else
         if attribute.required?
@@ -125,21 +129,47 @@ module HCast::Caster
         end
       end
     end
-    check_unexpected_attributes_not_given!(hash, casted_hash)
+    check_unexpected_attributes_not_given!(hash_keys, casted_hash.keys)
     casted_hash
   end
 
-  def cast_attribute(hash, attribute)
-    attribute.caster.cast(hash[attribute.name], attribute.name, attribute.options)
+  def cast_attribute(hash, attribute, options)
+    value = get_value(hash, attribute.name, options)
+    attribute.caster.cast(value, attribute.name, attribute.options)
   end
 
-  def cast_children(hash, attribute)
+  def cast_children(hash, attribute, options)
+    value = get_value(hash, attribute.name, options)
     if attribute.caster == HCast::Casters::ArrayCaster
-      hash[attribute.name].map do |val|
-        cast_attributes(val, attribute.children)
+      value.map do |val|
+        cast_attributes(val, attribute.children, options)
       end
     else
-      cast_attributes(hash[attribute.name], attribute.children)
+      cast_attributes(value, attribute.children, options)
+    end
+  end
+
+  def get_keys(hash, options)
+    if options[:input_keys] != options[:output_keys]
+      if options[:input_keys] == :symbol
+        hash.keys.map(&:to_s)
+      else
+        hash.keys.map(&:to_sym)
+      end
+    else
+      hash.keys
+    end
+  end
+
+  def get_value(hash, key, options)
+    if options[:input_keys] != options[:output_keys]
+      if options[:input_keys] == :symbol
+        hash[key.to_sym]
+      else
+        hash[key.to_s]
+      end
+    else
+      hash[key]
     end
   end
 
@@ -149,16 +179,33 @@ module HCast::Caster
     end
   end
 
+  def check_options!(options)
+    unless options.is_a?(Hash)
+      raise HCast::Errors::ArgumentError, "Options should be a hash"
+    end
+    if options[:input_keys] && ![:string, :symbol].include?(options[:input_keys])
+      raise HCast::Errors::ArgumentError, "input_keys should be :string or :symbol"
+    end
+    if options[:output_keys] && ![:string, :symbol].include?(options[:output_keys])
+      raise HCast::Errors::ArgumentError, "output_keys should be :string or :symbol"
+    end
+  end
+
   def check_hash_given!(hash)
     unless hash.is_a?(Hash)
       raise HCast::Errors::ArgumentError, "Hash should be given"
     end
   end
 
-  def check_unexpected_attributes_not_given!(hash, casted_hash)
-    unexpected_keys = hash.keys - casted_hash.keys
+  def check_unexpected_attributes_not_given!(input_hash_keys, casted_hash_keys)
+    unexpected_keys = input_hash_keys - casted_hash_keys
     unless unexpected_keys.empty?
       raise HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: #{unexpected_keys}"
     end
+  end
+
+  def set_default_options(options)
+    options[:input_keys]  ||= HCast.config.input_keys
+    options[:output_keys] ||= HCast.config.output_keys
   end
 end
