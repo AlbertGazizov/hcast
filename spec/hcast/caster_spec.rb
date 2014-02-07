@@ -256,4 +256,18 @@ describe HCast::Caster do
       }
     end
   end
+
+  context "checking invalid parameters" do
+    it "should raise CaterNotFound exception if caster name is invalid" do
+      expect do
+        class WrongCaster
+          include HCast::Caster
+
+          attributes do
+            integr   :name
+          end
+        end
+      end.to raise_error(HCast::Errors::CasterNotFoundError)
+    end
+  end
 end

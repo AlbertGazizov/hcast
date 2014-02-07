@@ -44,7 +44,7 @@ class HCast::AttributesParser
 
     def check_caster_exists!(caster)
       if !caster
-        raise HCast::Errors::CasterNotFoundError, "caster with name '#{caster_name}' is not found"
+        raise HCast::Errors::CasterNotFoundError, "caster with name '#{caster}' is not found"
       end
     end
 
