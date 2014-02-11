@@ -37,6 +37,7 @@ class HCast::AttributesCaster
         error_messages = validator.validate(casted_value, options)
         unless error_messages.empty?
           validation_errors.add_all(attribute.name, error_messages)
+          break
         end
       end
     end
