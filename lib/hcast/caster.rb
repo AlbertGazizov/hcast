@@ -109,7 +109,7 @@ module HCast::Caster
       check_options!(options)
       set_default_options(options)
 
-      attributes_caster = HCast::AttributesCaster.new(class_variable_get(:@@attributes), options)
+      attributes_caster = HCast::AttributesCaster.new(class_variable_get(:@@attributes), options, self)
       casted_hash = attributes_caster.cast(hash)
 
       if attributes_caster.has_validation_errors?

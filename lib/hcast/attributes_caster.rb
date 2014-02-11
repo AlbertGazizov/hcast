@@ -1,7 +1,7 @@
 class HCast::AttributesCaster
-  attr_reader :attributes, :validation_errors, :options
+  attr_reader :attributes, :validation_errors, :options, :validation_context
 
-  def initialize(attributes, options)
+  def initialize(attributes, options, validation_context)
     @attributes        = attributes
     @options           = options
     @validation_errors = AttrValidator::ValidationErrors.new
@@ -19,7 +19,7 @@ class HCast::AttributesCaster
       if hash_keys.include?(attribute.name)
          casted_value = cast_attribute(attribute, input_hash)
          casted_hash[attribute.name] = casted_value
-         validate_attribute(attribute, casted_value, input_hash)
+         validate_attribute(attribute, casted_hash, input_hash)
       else
         raise HCast::Errors::MissingAttributeError, "#{attribute.name} should be given" if attribute.required?
       end
@@ -31,7 +31,8 @@ class HCast::AttributesCaster
 
   private
 
-  def validate_attribute(attribute, casted_value, input_hash)
+  def validate_attribute(attribute, casted_hash, input_hash)
+    casted_value = casted_hash[attribute.name]
     attribute.options.each do |key, options|
       if validator = AttrValidator.validators[key]
         error_messages = validator.validate(casted_value, options)
@@ -39,6 +40,8 @@ class HCast::AttributesCaster
           validation_errors.add_all(attribute.name, error_messages)
           break
         end
+      elsif key == :validate
+        validation_context.send(options, casted_hash, input_hash, validation_errors)
       end
     end
   end
@@ -59,7 +62,7 @@ class HCast::AttributesCaster
     if attribute.caster == HCast::Casters::ArrayCaster
       errors_list = []
       casted_values = value.map do |val|
-        caster = self.class.new(attribute.children, options)
+        caster = self.class.new(attribute.children, options, validation_context)
         casted_value = caster.cast(val)
         errors_list << caster.validation_errors.to_hash
         casted_value
@@ -70,7 +73,7 @@ class HCast::AttributesCaster
       end
       casted_values
     else
-      caster = self.class.new(attribute.children, options)
+      caster = self.class.new(attribute.children, options, validation_context)
       casted_value = caster.cast(value)
       if caster.has_validation_errors?
         validation_errors.messages[attribute.name] = caster.validation_errors.to_hash
