@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/AlbertGazizov/attr_validator.git
+  revision: 5e57e2908971b94520b3d293784fc9ee9bdd5811
+  specs:
+    attr_validator (0.0.1)
+      activesupport
+
 PATH
   remote: .
   specs:
@@ -42,6 +49,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  attr_validator!
   bundler (~> 1.3)
   debugger
   hcast!

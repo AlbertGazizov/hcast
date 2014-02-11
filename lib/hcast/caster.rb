@@ -108,69 +108,12 @@ module HCast::Caster
       check_hash_given!(hash)
       check_options!(options)
       set_default_options(options)
-      cast_attributes(hash, class_variable_get(:@@attributes), options)
+
+      validation_errors = AttrValidator::ValidationErrors.new
+      HCast::AttributesCaster.new(class_variable_get(:@@attributes), validation_errors, options).cast(hash)
     end
 
     private
-
-    def cast_attributes(hash, attributes, options)
-      casted_hash = {}
-      hash_keys = get_keys(hash, options)
-      attributes.each do |attribute|
-        if hash_keys.include?(attribute.name)
-          casted_hash[attribute.name] = cast_attribute(hash, attribute, options)
-          if attribute.has_children?
-            casted_hash[attribute.name] = cast_children(hash, attribute, options)
-          end
-        else
-          if attribute.required?
-            raise HCast::Errors::MissingAttributeError, "#{attribute.name} should be given"
-          end
-        end
-      end
-      check_unexpected_attributes_not_given!(hash_keys, casted_hash.keys)
-      casted_hash
-    end
-
-    def cast_attribute(hash, attribute, options)
-      value = get_value(hash, attribute.name, options)
-      attribute.caster.cast(value, attribute.name, attribute.options)
-    end
-
-    def cast_children(hash, attribute, options)
-      value = get_value(hash, attribute.name, options)
-      if attribute.caster == HCast::Casters::ArrayCaster
-        value.map do |val|
-          cast_attributes(val, attribute.children, options)
-        end
-      else
-        cast_attributes(value, attribute.children, options)
-      end
-    end
-
-    def get_keys(hash, options)
-      if options[:input_keys] != options[:output_keys]
-        if options[:input_keys] == :symbol
-          hash.keys.map(&:to_s)
-        else
-          hash.keys.map(&:to_sym)
-        end
-      else
-        hash.keys
-      end
-    end
-
-    def get_value(hash, key, options)
-      if options[:input_keys] != options[:output_keys]
-        if options[:input_keys] == :symbol
-          hash[key.to_sym]
-        else
-          hash[key.to_s]
-        end
-      else
-        hash[key]
-      end
-    end
 
     def check_attributes_defined!
       unless class_variable_defined?(:@@attributes)
@@ -193,13 +136,6 @@ module HCast::Caster
     def check_hash_given!(hash)
       unless hash.is_a?(Hash)
         raise HCast::Errors::ArgumentError, "Hash should be given"
-      end
-    end
-
-    def check_unexpected_attributes_not_given!(input_hash_keys, casted_hash_keys)
-      unexpected_keys = input_hash_keys - casted_hash_keys
-      unless unexpected_keys.empty?
-        raise HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: #{unexpected_keys}"
       end
     end
 

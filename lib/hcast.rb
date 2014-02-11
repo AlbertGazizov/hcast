@@ -1,4 +1,5 @@
 require 'active_support/concern.rb'
+require 'attr_validator'
 
 require 'hcast/version'
 require 'hcast/errors'
@@ -6,6 +7,7 @@ require 'hcast/config'
 require 'hcast/casters'
 require 'hcast/metadata/attribute'
 require 'hcast/attributes_parser'
+require 'hcast/attributes_caster'
 require 'hcast/caster'
 
 module HCast
