@@ -2,9 +2,10 @@ class HCast::AttributesCaster
   attr_reader :attributes, :validation_errors, :options, :validation_context
 
   def initialize(attributes, options, validation_context)
-    @attributes        = attributes
-    @options           = options
-    @validation_errors = AttrValidator::ValidationErrors.new
+    @attributes         = attributes
+    @options            = options
+    @validation_context = validation_context
+    @validation_errors  = AttrValidator::ValidationErrors.new
   end
 
   def has_validation_errors?
