@@ -270,4 +270,70 @@ describe HCast::Caster do
       end.to raise_error(HCast::Errors::CasterNotFoundError)
     end
   end
+
+  context "validations" do
+    before :all do
+      class ContactWithValidationsCaster
+        include HCast::Caster
+
+        attributes do
+          hash :contact do
+            string   :name, presence: true, length: { max: 5 }
+            integer  :age, optional: true
+            float    :weight, numericality: { less_than_or_equal_to: 200 }
+            date     :birthday
+            datetime :last_logged_in
+            time     :last_visited_at
+            hash :company do
+              string :name, length: { min: 2 }
+            end
+            array :emails, each: :string
+            array :social_accounts, each: :hash do
+              string :name
+              symbol :type, inclusion: { in: [:twitter, :facebook] }
+            end
+          end
+        end
+      end
+    end
+
+    it "should collect validation errors and raise exception when hash is invalid" do
+      begin
+        ContactWithValidationsCaster.cast(
+          contact: {
+            name: "John Smith",
+            age: "22",
+            weight: "65.5",
+            birthday: "2014-02-02",
+            last_logged_in: "2014-02-02 10:10:00",
+            last_visited_at: "2014-02-02 10:10:00",
+            company: {
+              name: "MyCo",
+            },
+            emails: [ "test@example.com", "test2@example.com" ],
+            social_accounts: [
+              {
+                name: "john_smith",
+                type: 'twitter',
+              },
+              {
+                name: "John",
+                type: :yahoo,
+              },
+            ]
+          }
+        )
+      rescue HCast::Errors::ValidationError => e
+        e.errors.to_hash.should == {
+          contact: {
+            name: ["can't be more than 5"],
+            social_accounts: [
+              {},
+              { type: ["should be included in [:twitter, :facebook]"] },
+            ]
+          }
+        }
+      end
+    end
+  end
 end

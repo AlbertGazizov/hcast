@@ -1,10 +1,14 @@
 class HCast::AttributesCaster
   attr_reader :attributes, :validation_errors, :options
 
-  def initialize(attributes, validation_errors, options)
+  def initialize(attributes, options)
     @attributes        = attributes
-    @validation_errors = validation_errors
     @options           = options
+    @validation_errors = AttrValidator::ValidationErrors.new
+  end
+
+  def has_validation_errors?
+    !validation_errors.empty?
   end
 
   def cast(input_hash)
@@ -28,6 +32,14 @@ class HCast::AttributesCaster
   private
 
   def validate_attribute(attribute, casted_value, input_hash)
+    attribute.options.each do |key, options|
+      if validator = AttrValidator.validators[key]
+        error_messages = validator.validate(casted_value, options)
+        unless error_messages.empty?
+          validation_errors.add_all(attribute.name, error_messages)
+        end
+      end
+    end
   end
 
   def cast_attribute(attribute, hash)
@@ -44,11 +56,25 @@ class HCast::AttributesCaster
   def cast_children(hash, attribute)
     value = get_value(hash, attribute.name)
     if attribute.caster == HCast::Casters::ArrayCaster
-      value.map do |val|
-        self.class.new(attribute.children, validation_errors, options).cast(val)
+      errors_list = []
+      casted_values = value.map do |val|
+        caster = self.class.new(attribute.children, options)
+        casted_value = caster.cast(val)
+        errors_list << caster.validation_errors.to_hash
+        casted_value
       end
+      if errors_list.any? { |errors| !errors.empty? }
+        validation_errors.messages[attribute.name] ||= []
+        validation_errors.messages[attribute.name] += errors_list
+      end
+      casted_values
     else
-      self.class.new(attribute.children, validation_errors, options).cast(value)
+      caster = self.class.new(attribute.children, options)
+      casted_value = caster.cast(value)
+      if caster.has_validation_errors?
+        validation_errors.messages[attribute.name] = caster.validation_errors.to_hash
+      end
+      casted_value
     end
   end
 

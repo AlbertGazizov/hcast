@@ -17,4 +17,22 @@ module HCast::Errors
 
   # Raised when unexpected hash attribute was given for casting
   class UnexpectedAttributeError < HCastError; end
+
+  # Raised when hash has validation errors
+  class ValidationError < StandardError
+    attr_reader :errors
+
+    def initialize(message, errors)
+      @errors = errors
+      super(message)
+    end
+
+    def message
+      "#{@message}\n#{errors.to_hash}"
+    end
+
+    def short_message
+      'Validation error'
+    end
+  end
 end

@@ -109,8 +109,14 @@ module HCast::Caster
       check_options!(options)
       set_default_options(options)
 
-      validation_errors = AttrValidator::ValidationErrors.new
-      HCast::AttributesCaster.new(class_variable_get(:@@attributes), validation_errors, options).cast(hash)
+      attributes_caster = HCast::AttributesCaster.new(class_variable_get(:@@attributes), options)
+      casted_hash = attributes_caster.cast(hash)
+
+      if attributes_caster.has_validation_errors?
+        raise HCast::Errors::ValidationError.new("Validation Error", attributes_caster.validation_errors)
+      end
+
+      casted_hash
     end
 
     private
