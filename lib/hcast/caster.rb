@@ -79,11 +79,6 @@
 module HCast::Caster
   extend ActiveSupport::Concern
 
-  included do
-    # Stores caster attributes
-    @@attributes = []
-  end
-
   module ClassMethods
 
     # Defines casting rules
