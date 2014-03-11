@@ -26,13 +26,12 @@ class HCast::AttributesCaster
   private
 
   def cast_attribute(attribute, hash)
-    value        = get_value(hash, attribute.name)
-    casted_value = attribute.caster.cast(value, attribute.name, attribute.options)
-
-    if attribute.has_children?
-      cast_children(hash, attribute)
+    value = get_value(hash, attribute.name)
+    if value.nil? && attribute.allow_nil?
+      nil
     else
-      casted_value
+      casted_value = attribute.caster.cast(value, attribute.name, attribute.options)
+      attribute.has_children? ? cast_children(hash, attribute) : casted_value
     end
   end
 

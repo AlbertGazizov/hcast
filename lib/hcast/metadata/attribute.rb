@@ -19,7 +19,11 @@ module HCast::Metadata
     end
 
     def optional?
-      options[:optional]
+      !!options[:optional]
+    end
+
+    def allow_nil?
+      !!options[:allow_nil]
     end
 
   end
