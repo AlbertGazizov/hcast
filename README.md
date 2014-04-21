@@ -33,7 +33,7 @@ end
 ```
 Instanticate the caster and give your hash for casting:
 ```ruby
-ContactCaster.new.cast({
+ContactCaster.cast({
     contact: {
       name: "John Smith",
       age: "22",
