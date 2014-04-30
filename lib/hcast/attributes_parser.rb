@@ -29,7 +29,7 @@ class HCast::AttributesParser
       options   = args[1] || {}
       caster = HCast.casters[caster_name]
 
-      check_caster_exists!(caster)
+      check_caster_exists!(caster, caster_name)
       check_attr_name_valid!(attr_name)
       check_options_is_hash!(options)
 
@@ -42,9 +42,9 @@ class HCast::AttributesParser
 
     private
 
-    def check_caster_exists!(caster)
+    def check_caster_exists!(caster, caster_name)
       if !caster
-        raise HCast::Errors::CasterNotFoundError, "caster with name '#{caster}' is not found"
+        raise HCast::Errors::CasterNotFoundError, "caster with name '#{caster_name}' is not found"
       end
     end
 
