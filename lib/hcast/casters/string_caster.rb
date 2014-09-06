@@ -6,7 +6,7 @@ class HCast::Casters::StringCaster
     elsif value.is_a?(Symbol)
       value.to_s
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be a string"
+      raise HCast::Errors::CastingError, "should be a string"
     end
   end
 

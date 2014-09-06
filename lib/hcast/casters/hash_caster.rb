@@ -4,7 +4,7 @@ class HCast::Casters::HashCaster
     if value.is_a?(Hash)
       value
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be a hash"
+      raise HCast::Errors::CastingError, "should be a hash"
     end
   end
 

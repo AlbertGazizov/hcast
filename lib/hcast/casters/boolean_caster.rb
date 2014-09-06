@@ -8,7 +8,7 @@ class HCast::Casters::BooleanCaster
     elsif ['0', 'false', 'off', 0].include?(value)
       false
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be a boolean"
+      raise HCast::Errors::CastingError, "should be a boolean"
     end
   end
 

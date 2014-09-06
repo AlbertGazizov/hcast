@@ -7,10 +7,10 @@ class HCast::Casters::DateCaster
       begin
         Date.parse(value)
       rescue ArgumentError => e
-        raise HCast::Errors::CastingError, "#{attr_name} is invalid date"
+        raise HCast::Errors::CastingError, "is invalid date"
       end
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be a date"
+      raise HCast::Errors::CastingError, "should be a date"
     end
   end
 

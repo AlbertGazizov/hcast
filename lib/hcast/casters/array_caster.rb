@@ -8,7 +8,7 @@ class HCast::Casters::ArrayCaster
         value
       end
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be an array"
+      raise HCast::Errors::CastingError, "should be an array"
     end
   end
 

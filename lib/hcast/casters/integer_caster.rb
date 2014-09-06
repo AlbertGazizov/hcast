@@ -7,10 +7,10 @@ class HCast::Casters::IntegerCaster
       begin
         Integer(value)
       rescue ArgumentError => e
-        raise HCast::Errors::CastingError, "#{attr_name} is invalid integer"
+        raise HCast::Errors::CastingError, "is invalid integer"
       end
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be a integer"
+      raise HCast::Errors::CastingError, "should be a integer"
     end
   end
 

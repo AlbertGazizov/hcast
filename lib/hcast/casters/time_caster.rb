@@ -7,10 +7,10 @@ class HCast::Casters::TimeCaster
       begin
         Time.parse(value)
       rescue ArgumentError => e
-        raise HCast::Errors::CastingError, "#{attr_name} is invalid time"
+        raise HCast::Errors::CastingError, "is invalid time"
       end
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be a time"
+      raise HCast::Errors::CastingError, "should be a time"
     end
   end
 

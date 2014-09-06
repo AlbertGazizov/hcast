@@ -7,10 +7,10 @@ class HCast::Casters::FloatCaster
       begin
         Float(value)
       rescue ArgumentError => e
-        raise HCast::Errors::CastingError, "#{attr_name} is invalid float"
+        raise HCast::Errors::CastingError, "is invalid float"
       end
     else
-      raise HCast::Errors::CastingError, "#{attr_name} should be a float"
+      raise HCast::Errors::CastingError, "should be a float"
     end
   end
 

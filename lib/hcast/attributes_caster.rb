@@ -12,10 +12,15 @@ class HCast::AttributesCaster
     hash_keys = get_keys(input_hash)
     attributes.each do |attribute|
       if hash_keys.include?(attribute.name)
-         casted_value = cast_attribute(attribute, input_hash)
-         casted_hash[attribute.name] = casted_value
+        begin
+          casted_value = cast_attribute(attribute, input_hash)
+          casted_hash[attribute.name] = casted_value
+        rescue HCast::Errors::AttributeError => e
+          e.add_namespace(attribute.name)
+          raise e
+        end
       else
-        raise HCast::Errors::MissingAttributeError, "#{attribute.name} should be given" if attribute.required?
+        raise HCast::Errors::MissingAttributeError.new("should be given", attribute.name)if attribute.required?
       end
     end
     check_unexpected_attributes_not_given!(hash_keys, casted_hash.keys)
@@ -75,7 +80,7 @@ class HCast::AttributesCaster
   def check_unexpected_attributes_not_given!(input_hash_keys, casted_hash_keys)
     unexpected_keys = input_hash_keys - casted_hash_keys
     unless unexpected_keys.empty?
-      raise HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: #{unexpected_keys}"
+      raise HCast::Errors::UnexpectedAttributeError.new("is not valid attribute name", unexpected_keys.first)
     end
   end
 

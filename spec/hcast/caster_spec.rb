@@ -108,7 +108,7 @@ describe HCast::Caster do
 
       expect do
         ContactCaster.cast(input_hash)
-      end.to raise_error(HCast::Errors::CastingError, "name should be a string")
+      end.to raise_error(HCast::Errors::CastingError, "contact[name] should be a string")
     end
 
     it "should raise error if some attribute wasn't given" do
@@ -138,7 +138,7 @@ describe HCast::Caster do
 
       expect do
         ContactCaster.cast(input_hash)
-      end.to raise_error(HCast::Errors::MissingAttributeError, "name should be given")
+      end.to raise_error(HCast::Errors::MissingAttributeError, "contact[name] should be given")
     end
 
     it "should not raise error if attribute is optional" do
@@ -173,8 +173,8 @@ describe HCast::Caster do
 
     it "should raise error if unexpected attribute was given" do
       input_hash = {
-        wrong_attribute: 'foo',
         contact: {
+          wrong_attribute: 'foo',
           name: "Jim",
           weight: 65.5,
           birthday: Date.today,
@@ -199,7 +199,7 @@ describe HCast::Caster do
 
       expect do
         ContactCaster.cast(input_hash)
-      end.to raise_error(HCast::Errors::UnexpectedAttributeError, "Unexpected attributes given: [:wrong_attribute]")
+      end.to raise_error(HCast::Errors::UnexpectedAttributeError, "contact[wrong_attribute] is not valid attribute name")
     end
 
     it "should convert accept hash with string keys and cast them to symbol keys" do
