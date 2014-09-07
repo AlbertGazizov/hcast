@@ -80,6 +80,56 @@ describe HCast::Caster do
       }
     end
 
+    describe "Custom casters" do
+      class SettingsCaster
+        include HCast::Caster
+
+        attributes do
+          string :account
+        end
+      end
+
+      class EmailCaster
+        include HCast::Caster
+
+        attributes do
+          string :address
+        end
+      end
+
+      class CompanyCaster
+        include HCast::Caster
+
+        attributes do
+          string :name
+          hash   :settings, caster: SettingsCaster
+          array  :emails,  caster: EmailCaster
+        end
+      end
+
+      it "should allow specify caster for nested hash attribute" do
+        casted_hash = CompanyCaster.cast(
+          name: 'Might & Magic',
+          settings: {
+            account: :'migthy_lord'
+          },
+          emails: [
+            { address: :'test1@example.com' },
+            { address: :'test2@example.com' },
+          ]
+        )
+
+        casted_hash.should == {
+          name: "Might & Magic",
+          settings: { account: "migthy_lord" },
+          emails: [
+            { address: "test1@example.com" },
+            { address: "test2@example.com" }
+          ]
+        }
+      end
+    end
+
     it "should raise error if some attribute can't be casted" do
       input_hash = {
         contact: {

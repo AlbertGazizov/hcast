@@ -36,19 +36,27 @@ class HCast::AttributesCaster
       nil
     else
       casted_value = attribute.caster.cast(value, attribute.name, attribute.options)
-      attribute.has_children? ? cast_children(hash, attribute) : casted_value
+      if attribute.has_children?
+        cast_children(casted_value, attribute)
+      elsif caster = attribute.options[:caster]
+        cast_children_with_caster(casted_value, attribute, caster)
+      else
+        casted_value
+      end
     end
   end
 
-  def cast_children(hash, attribute)
-    value = get_value(hash, attribute.name)
+  def cast_children(value, attribute)
+    caster = self.class.new(attribute.children, options)
+    cast_children_with_caster(value, attribute, caster)
+  end
+
+  def cast_children_with_caster(value, attribute, caster)
     if attribute.caster == HCast::Casters::ArrayCaster
       value.map do |val|
-        caster = self.class.new(attribute.children, options)
         caster.cast(val)
       end
     else
-      caster = self.class.new(attribute.children, options)
       caster.cast(value)
     end
   end
