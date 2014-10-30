@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'debugger'
 require 'hcast'
 
 RSpec.configure do |config|

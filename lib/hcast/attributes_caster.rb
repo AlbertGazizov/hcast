@@ -6,7 +6,7 @@ class HCast::AttributesCaster
     @options            = options
   end
 
-  def cast(input_hash)
+  def cast(input_hash, options = {})
     casted_hash = {}
 
     hash_keys = get_keys(input_hash)
@@ -54,10 +54,10 @@ class HCast::AttributesCaster
   def cast_children_with_caster(value, attribute, caster)
     if attribute.caster == HCast::Casters::ArrayCaster
       value.map do |val|
-        caster.cast(val)
+        caster.cast(val, options)
       end
     else
-      caster.cast(value)
+      caster.cast(value, options)
     end
   end
 
