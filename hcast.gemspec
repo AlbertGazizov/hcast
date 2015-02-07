@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = HCast::VERSION
   spec.authors       = ["Albert Gazizov"]
   spec.email         = ["deeper4k@gmail.com"]
-  spec.description   = %q{Hash Caster and Validator}
-  spec.summary       = %q{Hash Caster and Validator}
+  spec.description   = %q{Declarative Hash Caster}
+  spec.summary       = %q{Declarative Hash Caster}
   spec.homepage      = "http://github.com/AlbertGazizov/hcast"
   spec.license       = "MIT"
 
