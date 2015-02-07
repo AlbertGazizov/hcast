@@ -59,7 +59,7 @@ ContactCaster.cast({
   }
 })
 ```
-The casted will cast your hash and output will be:
+The caster will cast your hash attributes to:
 ```ruby
 {
   contact: {
@@ -87,7 +87,7 @@ The casted will cast your hash and output will be:
 }
 ```
 
-if some of the attributes can't be casted the HCast::Errors::CastingError will be raised
+if some of the attributes can't be casted the HCast::Errors::CastingError is raised
 
 
 ## Installation
