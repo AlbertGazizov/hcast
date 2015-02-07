@@ -6,13 +6,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    columnize (0.3.6)
-    debugger (1.6.5)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.3.1)
-    debugger-linecache (1.2.0)
-    debugger-ruby_core_source (1.3.1)
     diff-lcs (1.2.5)
     rake (10.1.1)
     rspec (2.14.1)
@@ -29,7 +22,6 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.3)
-  debugger
   hcast!
   rake
   rspec
