@@ -4,7 +4,7 @@
 
 HCast is a library for casting hash attributes
 
-## Usage
+### Usage
 
 Create caster class and declare hash attributes inside:
 ```ruby
@@ -90,24 +90,5 @@ The caster will cast your hash attributes to:
 if some of the attributes can't be casted the HCast::Errors::CastingError is raised
 
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'hcast'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install hcast
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+## Author
+Albert Gazizov, [@deeper4k](https://twitter.com/deeper4k)
