@@ -252,6 +252,38 @@ describe HCast::Caster do
       end.to raise_error(HCast::Errors::UnexpectedAttributeError, "contact[wrong_attribute] is not valid attribute name")
     end
 
+    it "shouldn't unexpected attributes error if skip_unexpected_attributes flag is set to true" do
+      input_hash = {
+        contact: {
+          wrong_attribute: 'foo',
+          name: "Jim",
+          weight: 65.5,
+          birthday: Date.today,
+          last_logged_in: DateTime.now,
+          last_visited_at: Time.now,
+          company: {
+            name: "MyCo",
+          },
+          emails: [ "test@example.com", "test2@example.com" ],
+          social_accounts: [
+            {
+              name: "john_smith",
+              type: :twitter,
+            },
+            {
+              name: "John",
+              type: :facebook,
+            },
+          ]
+        }
+      }
+
+      expect do
+        ContactCaster.cast(input_hash, skip_unexpected_attributes: true)
+      end.not_to raise_error(HCast::Errors::UnexpectedAttributeError)
+
+    end
+
     it "should convert accept hash with string keys and cast them to symbol keys" do
       input_hash = {
         'contact' => {

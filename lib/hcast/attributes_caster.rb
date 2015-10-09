@@ -23,7 +23,10 @@ class HCast::AttributesCaster
         raise HCast::Errors::MissingAttributeError.new("should be given", attribute.name)if attribute.required?
       end
     end
-    check_unexpected_attributes_not_given!(hash_keys, casted_hash.keys)
+
+    if !options[:skip_unexpected_attributes]
+      check_unexpected_attributes_not_given!(hash_keys, casted_hash.keys)
+    end
 
     casted_hash
   end
