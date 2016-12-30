@@ -90,5 +90,16 @@ The caster will cast your hash attributes to:
 if some of the attributes can't be casted the HCast::Errors::CastingError is raised
 
 
+## Configuration
+
+
+```ruby
+# expect all input keys to be strings
+HCast.config.input_keys  = :string
+
+# expect all output keys to be symbols
+HCast.config.output_keys = :symbol
+```
+
 ## Author
 Albert Gazizov, [@deeper4k](https://twitter.com/deeper4k)
