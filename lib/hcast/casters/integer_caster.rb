@@ -1,17 +1,15 @@
 class HCast::Casters::IntegerCaster
 
   def self.cast(value, attr_name, options = {})
-    if value.is_a?(Integer)
-      value
-    elsif value.is_a?(String)
-      begin
-        Integer(value)
-      rescue ArgumentError => e
-        raise HCast::Errors::CastingError, "is invalid integer"
-      end
-    else
-      raise HCast::Errors::CastingError, "should be a integer"
-    end
+    return value if value.is_a?(Integer)
+    return parse_string(value) if value.is_a?(String)
+    raise HCast::Errors::CastingError, "should be a integer"
+  end
+
+  def self.parse_string(value)
+    Integer(value)
+  rescue ArgumentError => e
+    raise HCast::Errors::CastingError, "is invalid integer"
   end
 
 end
