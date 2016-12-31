@@ -8,11 +8,8 @@ class HCast::Casters::SymbolCaster
   end
 
   def self.cast_string(value)
-    if value.length > MAX_SYMBOL_LENGTH
-      raise HCast::Errors::CastingError, "is too long to be a symbol"
-    else
-      value.to_sym
-    end
+    return value.to_sym if value.length <= MAX_SYMBOL_LENGTH
+    raise HCast::Errors::CastingError, "is too long to be a symbol (#{MAX_SYMBOL_LENGTH} max.)"
   end
 
 end
