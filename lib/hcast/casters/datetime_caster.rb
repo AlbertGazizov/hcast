@@ -1,19 +1,15 @@
 class HCast::Casters::DateTimeCaster
 
   def self.cast(value, attr_name, options = {})
-    if value.is_a?(DateTime)
-      value
-    elsif value.is_a?(Time)
-      value.to_datetime
-    elsif value.is_a?(String)
-      begin
-        DateTime.parse(value)
-      rescue ArgumentError => e
-        raise HCast::Errors::CastingError, "is invalid datetime"
-      end
-    else
-      raise HCast::Errors::CastingError, "should be a datetime"
-    end
+    return value               if value.is_a?(DateTime)
+    return value.to_datetime   if value.is_a?(Time)
+    return parse_string(value) if value.is_a?(String)
+    raise HCast::Errors::CastingError, "should be a datetime"
   end
 
+  def self.parse_string(value)
+    DateTime.parse(value)
+  rescue ArgumentError => e
+    raise HCast::Errors::CastingError, "is invalid datetime"
+  end
 end
