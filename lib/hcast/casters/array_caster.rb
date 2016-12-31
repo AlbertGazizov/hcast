@@ -1,22 +1,17 @@
 class HCast::Casters::ArrayCaster
 
   def self.cast(value, attr_name, options = {})
-    if value.is_a?(Array)
-      if options[:each]
-        cast_array_items(value, attr_name, options)
-      else
-        value
-      end
-    else
-      raise HCast::Errors::CastingError, "should be an array"
-    end
+    raise HCast::Errors::CastingError, "should be an array" unless value.is_a?(Array)
+    return value unless options[:each]
+
+    cast_array_items(value, attr_name, options)
   end
 
   private
 
   def self.cast_array_items(array, attr_name, options)
     caster_name = options[:each]
-    caster = HCast.casters[caster_name]
+    caster      = HCast.casters[caster_name]
     check_caster_exists!(caster, caster_name)
     array.map do |item|
       caster.cast(item, "#{attr_name} item", options)
