@@ -80,6 +80,7 @@ module HCast::Caster
   extend HCast::Concern
 
   module ClassMethods
+    ALLOWED_OPTIONS = [:string, :symbol]
 
     # Defines casting rules
     # @example
@@ -120,10 +121,10 @@ module HCast::Caster
       unless options.is_a?(Hash)
         raise HCast::Errors::ArgumentError, "Options should be a hash"
       end
-      if options[:input_keys] && ![:string, :symbol].include?(options[:input_keys])
+      if options[:input_keys] && !ALLOWED_OPTIONS.include?(options[:input_keys])
         raise HCast::Errors::ArgumentError, "input_keys should be :string or :symbol"
       end
-      if options[:output_keys] && ![:string, :symbol].include?(options[:output_keys])
+      if options[:output_keys] && !ALLOWED_OPTIONS.include?(options[:output_keys])
         raise HCast::Errors::ArgumentError, "output_keys should be :string or :symbol"
       end
     end
