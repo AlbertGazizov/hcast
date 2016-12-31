@@ -6,6 +6,9 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    allocation_stats (0.1.5)
+    bixby-bench (0.1.0)
+      allocation_stats
     byebug (9.0.6)
     diff-lcs (1.2.5)
     rake (10.1.1)
@@ -22,6 +25,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  allocation_stats
+  bixby-bench
   bundler (~> 1.3)
   byebug
   hcast!
