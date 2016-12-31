@@ -158,7 +158,7 @@ describe HCast::Caster do
 
       expect do
         ContactCaster.cast(input_hash)
-      end.to raise_error(HCast::Errors::CastingError, "contact[name] should be a string")
+      end.to raise_error(HCast::Errors::CastingError, "contact[name] should be a string, but was Hash")
     end
 
     it "should raise error if some attribute wasn't given" do
@@ -378,7 +378,7 @@ describe HCast::Caster do
           city: nil,
           zip: nil
         )
-      end.to raise_error(HCast::Errors::CastingError, "city should be a string")
+      end.to raise_error(HCast::Errors::CastingError, "city should be a string, but was NilClass")
     end
   end
 
