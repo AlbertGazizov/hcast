@@ -2,8 +2,8 @@ class HCast::AttributesCaster
   attr_reader :attributes, :options
 
   def initialize(attributes, options)
-    @attributes         = attributes
-    @options            = options
+    @attributes = attributes
+    @options    = options
   end
 
   def cast(input_hash, options = {})
@@ -55,36 +55,28 @@ class HCast::AttributesCaster
   end
 
   def cast_children_with_caster(value, attribute, caster)
-    if attribute.caster == HCast::Casters::ArrayCaster
-      value.map do |val|
-        caster.cast(val, options)
-      end
-    else
-      caster.cast(value, options)
+    return caster.cast(value, options) if attribute.caster != HCast::Casters::ArrayCaster
+
+    value.map do |val|
+      caster.cast(val, options)
     end
   end
 
   def get_keys(hash)
-    if options[:input_keys] != options[:output_keys]
-      if options[:input_keys] == :symbol
-        hash.keys.map(&:to_s)
-      else
-        hash.keys.map(&:to_sym)
-      end
+    return hash.keys if options[:input_keys] == options[:output_keys]
+    if options[:input_keys] == :symbol # FIXME: this does not look right...
+      hash.keys.map(&:to_s)
     else
-      hash.keys
+      hash.keys.map(&:to_sym)
     end
   end
 
   def get_value(hash, key)
-    if options[:input_keys] != options[:output_keys]
-      if options[:input_keys] == :symbol
-        hash[key.to_sym]
-      else
-        hash[key.to_s]
-      end
+    return hash[key] if options[:input_keys] == options[:output_keys]
+    if options[:input_keys] == :symbol
+      hash[key.to_sym]
     else
-      hash[key]
+      hash[key.to_s]
     end
   end
 
