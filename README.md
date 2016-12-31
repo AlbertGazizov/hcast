@@ -90,6 +90,21 @@ The caster will cast your hash attributes to:
 if some of the attributes can't be casted the HCast::Errors::CastingError is raised
 
 
+Also you can provide options to every caster about expected keys type for input/output (:symbol / :string)
+
+```ruby
+class SettingsCaster
+  include HCast::Caster
+
+  attributes do
+    string :account
+  end
+end
+SettingsCaster.cast({account: "some"}, input_keys: :symbol, output_keys: :string)
+# => {"account" => "some"}
+```
+
+
 ## Configuration
 
 
