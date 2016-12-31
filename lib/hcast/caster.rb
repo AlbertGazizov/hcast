@@ -92,7 +92,7 @@ module HCast::Caster
       raise ArgumentError, "You should provide block" unless block_given?
 
       attributes = HCast::AttributesParser.parse(&block)
-      self.class_variable_set(:@@attributes, attributes)
+      self.instance_variable_set(:@attributes, attributes)
     end
 
     # Performs casting
@@ -104,14 +104,14 @@ module HCast::Caster
       check_options!(options)
       set_default_options(options)
 
-      attributes_caster = HCast::AttributesCaster.new(class_variable_get(:@@attributes), options)
+      attributes_caster = HCast::AttributesCaster.new(instance_variable_get(:@attributes), options)
       attributes_caster.cast(hash)
     end
 
     private
 
     def check_attributes_defined!
-      unless class_variable_defined?(:@@attributes)
+      unless instance_variable_defined?(:@attributes)
         raise HCast::Errors::ArgumentError, "Attributes block should be defined"
       end
     end
