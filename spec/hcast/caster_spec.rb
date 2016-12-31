@@ -381,4 +381,31 @@ describe HCast::Caster do
       end.to raise_error(HCast::Errors::CastingError, "city should be a string")
     end
   end
+
+  context "input_keys" do
+    it "strings -> symbol works" do
+      expect(
+        SettingsCaster.cast({"account" => "value"}, {input_keys: :string, output_keys: :symbol})
+      ).to eq({account: "value"})
+    end
+
+    it "symbol -> string works" do
+      expect(
+        SettingsCaster.cast({account: "value"}, {input_keys: :symbol, output_keys: :string})
+      ).to eq({"account" => "value"})
+    end
+
+    it "symbol -> symbol works" do
+      expect(
+        SettingsCaster.cast({account: "value"}, {input_keys: :symbol, output_keys: :symbol})
+      ).to eq({account: "value"})
+    end
+
+    it "string -> string works" do
+      pending
+      expect(
+        SettingsCaster.cast({"account" => "value"}, {input_keys: :string, output_keys: :string})
+      ).to eq({"account" => "value"})
+    end
+  end
 end

@@ -103,7 +103,7 @@ module HCast::Caster
       check_attributes_defined!
       check_hash_given!(hash)
       check_options!(options)
-      set_default_options(options)
+      options = set_default_options(options)
 
       attributes_caster = HCast::AttributesCaster.new(instance_variable_get(:@attributes), options)
       attributes_caster.cast(hash)
@@ -138,6 +138,7 @@ module HCast::Caster
     def set_default_options(options)
       options[:input_keys]  ||= HCast.config.input_keys
       options[:output_keys] ||= HCast.config.output_keys
+      options
     end
   end
 end
