@@ -31,7 +31,7 @@ class ContactCaster
   end
 end
 ```
-Instanticate the caster and give your hash for casting:
+Instantiate the caster and give your hash for casting:
 ```ruby
 ContactCaster.cast({
     contact: {
