@@ -1,5 +1,5 @@
 # HCast [![Build Status](https://travis-ci.org/AlbertGazizov/hcast.png)](https://travis-ci.org/AlbertGazizov/hcast) [![Code Climate](https://codeclimate.com/github/AlbertGazizov/hcast.png)](https://codeclimate.com/github/AlbertGazizov/hcast)
-[![codecov.io](https://codecov.io/github/ddd-ruby/hcast/coverage.svg?branch=master)](https://codecov.io/github/ddd-ruby/hcast?branch=master)
+[![codecov](https://codecov.io/gh/ddd-ruby/hcast/branch/master/graph/badge.svg)](https://codecov.io/gh/ddd-ruby/hcast)
 
 
 
