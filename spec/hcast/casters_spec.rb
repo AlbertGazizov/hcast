@@ -1,6 +1,34 @@
 require 'spec_helper'
 
 describe "Casters" do
+  context HCast::Casters::ArrayCaster do
+    def cast(v)
+      HCast::Casters::ArrayCaster.cast(v, :attr_name)
+    end
+
+    it "works with real values" do
+      expect(cast([true])).to eq([true])
+    end
+
+    it "works with given caster" do
+      expect(
+        HCast::Casters::ArrayCaster.cast(["true"], :attr_name, {each: :boolean})
+      ).to eq([true])
+    end
+
+    it "raises else with wrong values" do
+      expect{
+        cast("something")
+      }.to raise_error(HCast::Errors::CastingError)
+    end
+
+    it "raises when given caster does not exist" do
+      expect{
+        HCast::Casters::ArrayCaster.cast(["true"], :attr_name, {each: :booleans})
+      }.to raise_error(HCast::Errors::CasterNotFoundError, "caster with name booleans is not found")
+    end
+  end
+
   context HCast::Casters::BooleanCaster do
     def cast(v)
       HCast::Casters::BooleanCaster.cast(v, :attr_name)

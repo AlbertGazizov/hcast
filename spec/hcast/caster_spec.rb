@@ -443,5 +443,29 @@ describe HCast::Caster do
           SettingsCaster.cast(["some"])
         }.to raise_error(HCast::Errors::ArgumentError, "Hash should be given")
     end
+
+    context "AttributesParser" do
+      it "raises when attribute name is not string/symbol" do
+        expect{
+          class BadAttrNameCaster
+            include HCast::Caster
+            attributes do
+              string 4545
+            end
+          end
+        }.to raise_error(HCast::Errors::ArgumentError, "attribute name should be a symbol or string")
+      end
+
+      it "raises when attribute options are not hash" do
+        expect{
+          class AttrOptionsNotHashCaster
+            include HCast::Caster
+            attributes do
+              string :some, [1,2,3]
+            end
+          end
+        }.to raise_error(HCast::Errors::ArgumentError, "attribute options should be a Hash")
+      end
+    end
   end
 end
