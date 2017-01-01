@@ -65,7 +65,6 @@ class HCast::AttributesCaster
   def cast_key(value, options)
     return value      if options[:output_keys] == :symbol
     return value.to_s if options[:output_keys] == :string
-    raise "something wrong with options #{options}"
   end
 
   def get_keys(hash)
