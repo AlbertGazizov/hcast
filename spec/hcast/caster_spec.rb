@@ -408,4 +408,40 @@ describe HCast::Caster do
       ).to eq({"account" => "value"})
     end
   end
+
+  context "possible exeptions" do
+    it "raises when attributes were not defined" do
+      class NoAttrCaster
+        include HCast::Caster
+      end
+
+      expect{
+        NoAttrCaster.cast({a: 1})
+      }.to raise_error(HCast::Errors::ArgumentError, "Attributes block should be defined")
+    end
+
+    context "check_options!" do
+      it "raises when options are not a hash" do
+        expect {
+          SettingsCaster.cast({account: "some"}, 1)
+        }.to raise_error(HCast::Errors::ArgumentError, "Options should be a hash")
+      end
+
+      it "raises on bad options" do
+        expect {
+          SettingsCaster.cast({account: "some"}, {input_keys: "string"})
+        }.to raise_error(HCast::Errors::ArgumentError, "input_keys should be :string or :symbol")
+
+        expect {
+          SettingsCaster.cast({account: "some"}, {output_keys: "string"})
+        }.to raise_error(HCast::Errors::ArgumentError, "output_keys should be :string or :symbol")
+      end
+    end
+
+    it "raises when input is not hash" do
+      expect {
+          SettingsCaster.cast(["some"])
+        }.to raise_error(HCast::Errors::ArgumentError, "Hash should be given")
+    end
+  end
 end
