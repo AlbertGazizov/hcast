@@ -1,13 +1,12 @@
 # HCast [![Build Status](https://travis-ci.org/AlbertGazizov/hcast.png)](https://travis-ci.org/AlbertGazizov/hcast) [![Code Climate](https://codeclimate.com/github/AlbertGazizov/hcast.png)](https://codeclimate.com/github/AlbertGazizov/hcast) [![codecov](https://codecov.io/gh/ddd-ruby/hcast/branch/master/graph/badge.svg)](https://codecov.io/gh/ddd-ruby/hcast)
 
 
-
-
 HCast is a library for casting hash attributes
 
 ### Usage
 
 Create caster class and declare hash attributes inside:
+
 ```ruby
 class ContactCaster
   include HCast::Caster
@@ -32,7 +31,9 @@ class ContactCaster
   end
 end
 ```
+
 Instantiate the caster and give your hash for casting:
+
 ```ruby
 ContactCaster.cast({
     contact: {
@@ -60,7 +61,9 @@ ContactCaster.cast({
   }
 })
 ```
+
 The caster will cast your hash attributes to:
+
 ```ruby
 {
   contact: {
