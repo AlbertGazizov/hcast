@@ -4,3 +4,5 @@ tags
 .DS_Store
 tmp/
 pkg
+.byebug_history
+coverage/

@@ -1,13 +1,8 @@
 class HCast::Casters::StringCaster
 
   def self.cast(value, attr_name, options = {})
-    if value.is_a?(String)
-      value
-    elsif value.is_a?(Symbol)
-      value.to_s
-    else
-      raise HCast::Errors::CastingError, "should be a string"
-    end
+    return value      if value.is_a?(String)
+    return value.to_s if value.is_a?(Symbol)
+    raise HCast::Errors::CastingError, "should be a string, but was #{value.class}"
   end
-
 end

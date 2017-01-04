@@ -2,11 +2,11 @@ class HCast::AttributesCaster
   attr_reader :attributes, :options
 
   def initialize(attributes, options)
-    @attributes         = attributes
-    @options            = options
+    @attributes = attributes
+    @options    = options
   end
 
-  def cast(input_hash, options = {})
+  def cast(input_hash)
     casted_hash = {}
 
     hash_keys = get_keys(input_hash)
@@ -14,13 +14,13 @@ class HCast::AttributesCaster
       if hash_keys.include?(attribute.name)
         begin
           casted_value = cast_attribute(attribute, input_hash)
-          casted_hash[attribute.name] = casted_value
+          casted_hash[cast_key(attribute.name, options)] = casted_value
         rescue HCast::Errors::AttributeError => e
           e.add_namespace(attribute.name)
           raise e
         end
       else
-        raise HCast::Errors::MissingAttributeError.new("should be given", attribute.name)if attribute.required?
+        raise HCast::Errors::MissingAttributeError.new("should be given", attribute.name) if attribute.required?
       end
     end
 
@@ -35,18 +35,18 @@ class HCast::AttributesCaster
 
   def cast_attribute(attribute, hash)
     value = get_value(hash, attribute.name)
-    if value.nil? && attribute.allow_nil?
-      nil
-    else
-      casted_value = attribute.caster.cast(value, attribute.name, attribute.options)
-      if attribute.has_children?
-        cast_children(casted_value, attribute)
-      elsif caster = attribute.options[:caster]
-        cast_children_with_caster(casted_value, attribute, caster)
-      else
-        casted_value
-      end
+    return nil if value.nil? && attribute.allow_nil?
+
+    casted_value = attribute.caster.cast(value, attribute.name, attribute.options)
+
+    if attribute.has_children?
+      return cast_children(casted_value, attribute)
     end
+    if caster = attribute.options[:caster]
+      return cast_children_with_caster(casted_value, attribute, caster)
+    end
+
+    casted_value
   end
 
   def cast_children(value, attribute)
@@ -55,44 +55,43 @@ class HCast::AttributesCaster
   end
 
   def cast_children_with_caster(value, attribute, caster)
-    if attribute.caster == HCast::Casters::ArrayCaster
-      value.map do |val|
-        caster.cast(val, options)
-      end
-    else
-      caster.cast(value, options)
+    return caster.cast(value) if attribute.caster != HCast::Casters::ArrayCaster
+
+    value.map do |val|
+      caster.cast(val)
     end
+  end
+
+  def cast_key(value, options)
+    return value      if options[:output_keys] == :symbol
+    return value.to_s if options[:output_keys] == :string
   end
 
   def get_keys(hash)
-    if options[:input_keys] != options[:output_keys]
-      if options[:input_keys] == :symbol
-        hash.keys.map(&:to_s)
-      else
-        hash.keys.map(&:to_sym)
-      end
-    else
-      hash.keys
-    end
+    return hash.keys if same_in_out_key_format?
+    hash.keys.map(&:to_sym)
   end
 
   def get_value(hash, key)
-    if options[:input_keys] != options[:output_keys]
-      if options[:input_keys] == :symbol
-        hash[key.to_sym]
-      else
-        hash[key.to_s]
-      end
-    else
-      hash[key]
-    end
+    return hash[key]        if same_in_out_key_format?
+    return hash[key.to_sym] if options[:input_keys] == :symbol
+    hash[key.to_s]
   end
 
   def check_unexpected_attributes_not_given!(input_hash_keys, casted_hash_keys)
-    unexpected_keys = input_hash_keys - casted_hash_keys
+    unexpected_keys = keys_diff(input_hash_keys, casted_hash_keys)
     unless unexpected_keys.empty?
       raise HCast::Errors::UnexpectedAttributeError.new("is not valid attribute name", unexpected_keys.first)
     end
   end
 
+  def same_in_out_key_format?
+    options[:input_keys] == options[:output_keys]
+  end
+
+  def keys_diff(input_hash_keys, casted_hash_keys)
+    return (input_hash_keys - casted_hash_keys) if same_in_out_key_format?
+    return (input_hash_keys - casted_hash_keys) if options[:output_keys] == :symbol # same for symbol
+    return (input_hash_keys - casted_hash_keys.map(&:to_sym)) if options[:output_keys] == :string
+  end
 end

@@ -80,6 +80,7 @@ module HCast::Caster
   extend HCast::Concern
 
   module ClassMethods
+    ALLOWED_OPTIONS = [:string, :symbol]
 
     # Defines casting rules
     # @example
@@ -92,7 +93,7 @@ module HCast::Caster
       raise ArgumentError, "You should provide block" unless block_given?
 
       attributes = HCast::AttributesParser.parse(&block)
-      self.class_variable_set(:@@attributes, attributes)
+      self.instance_variable_set(:@attributes, attributes)
     end
 
     # Performs casting
@@ -102,16 +103,16 @@ module HCast::Caster
       check_attributes_defined!
       check_hash_given!(hash)
       check_options!(options)
-      set_default_options(options)
+      options = set_default_options(options)
 
-      attributes_caster = HCast::AttributesCaster.new(class_variable_get(:@@attributes), options)
+      attributes_caster = HCast::AttributesCaster.new(instance_variable_get(:@attributes), options)
       attributes_caster.cast(hash)
     end
 
     private
 
     def check_attributes_defined!
-      unless class_variable_defined?(:@@attributes)
+      unless instance_variable_defined?(:@attributes)
         raise HCast::Errors::ArgumentError, "Attributes block should be defined"
       end
     end
@@ -120,10 +121,10 @@ module HCast::Caster
       unless options.is_a?(Hash)
         raise HCast::Errors::ArgumentError, "Options should be a hash"
       end
-      if options[:input_keys] && ![:string, :symbol].include?(options[:input_keys])
+      if options[:input_keys] && !ALLOWED_OPTIONS.include?(options[:input_keys])
         raise HCast::Errors::ArgumentError, "input_keys should be :string or :symbol"
       end
-      if options[:output_keys] && ![:string, :symbol].include?(options[:output_keys])
+      if options[:output_keys] && !ALLOWED_OPTIONS.include?(options[:output_keys])
         raise HCast::Errors::ArgumentError, "output_keys should be :string or :symbol"
       end
     end
@@ -137,6 +138,7 @@ module HCast::Caster
     def set_default_options(options)
       options[:input_keys]  ||= HCast.config.input_keys
       options[:output_keys] ||= HCast.config.output_keys
+      options
     end
   end
 end
