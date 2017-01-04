@@ -8,6 +8,7 @@ HCast is a library for casting hash attributes
 ### Usage
 
 Create caster class and declare hash attributes inside:
+
 ```ruby
 class ContactCaster
   include HCast::Caster
@@ -32,7 +33,9 @@ class ContactCaster
   end
 end
 ```
+
 Instantiate the caster and give your hash for casting:
+
 ```ruby
 ContactCaster.cast({
     contact: {
@@ -60,7 +63,9 @@ ContactCaster.cast({
   }
 })
 ```
+
 The caster will cast your hash attributes to:
+
 ```ruby
 {
   contact: {
